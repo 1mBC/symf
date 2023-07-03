@@ -28,7 +28,7 @@ class AccountController extends AbstractController
     public function new(Request $request, AccountRepository $accountRepository): Response
     {
         $account = new Account();
-        $form = $this->createForm(AccountType::class, $account);
+        $form = $this->createForm(AccountType::class, $account, ['create' => true]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -37,7 +37,7 @@ class AccountController extends AbstractController
             return $this->redirectToRoute('app_account_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('account/new.html.twig', [
+        return $this->render('account/new.html.twig', [
             'account' => $account,
             'form' => $form,
         ]);
@@ -51,51 +51,44 @@ class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_account_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Account $account, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/edit/{section}', name: 'app_account_edit', methods: ['GET', 'POST'])]
+    public function edit(int $section, Request $request, Account $account, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(AccountType::class, $account);
-
-        // dd($account);
-
+        //récupère le account qui est en DB
+        $form = $this->createForm(AccountType::class, $account, ['section' => $section]);
+        //remove account de tous les account/choices
+        //si je ne le fais pas maintenant après ce n'est plus possible
+        //car handlerequest retire les choices qui ont besoin de prendre 
+        //un remove account sans leur mettre de remove account ... pfff
+        foreach($account->getChoices() as $oldChoice)
+        { 
+            if($oldChoice->getCriterion()->getSection() == $section)
+            {
+                $oldChoice->removeAccount($account);
+            }
+        }
+ 
+        //met à jour le account avec les datas du form 
+        // /!\ sans passer par add/removeChoice ... pfff
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $data = $form->getData();
-
-            // Get the current choices in the database
-            $originalChoices = new ArrayCollection();
-            foreach ($account->getChoices() as $choice) {
-                $originalChoices->add($choice);
+            foreach($account->getChoices() as $choice){
+                $choice->addAccount($account);
             }
 
-            // Handle new and removed choices
-            foreach ($data->getChoices() as $choice) {
-                // If the choice is not in the original choices, add it
-                if (!$originalChoices->contains($choice)) {
-                    $account->addChoice($choice);
-                }
-            }
-            foreach ($originalChoices as $choice) {
-                // If the choice was removed in the form, remove it
-                if (!$data->getChoices()->contains($choice)) {
-                    $account->removeChoice($choice);
-                }
-            }
-            
             $entityManager->persist($account);
             $entityManager->flush();
     
-            // dd($account);
-            // $accountRepository->save($account, true);
-
-            // return $this->redirectToRoute('app_account_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_account_edit', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('account/edit.html.twig', [
             'account' => $account,
             'form' => $form,
+            'account_id' => $account->getId(),
+            'section' => $section,
         ]);
     }
 
