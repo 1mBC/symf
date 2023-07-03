@@ -64,6 +64,7 @@ class Choice
     {
         if (!$this->account->contains($account)) {
             $this->account->add($account);
+            $account->addChoice($this);  // Make sure to update the Choice on the Account side
         }
 
         return $this;
@@ -71,8 +72,10 @@ class Choice
 
     public function removeAccount(Account $account): static
     {
-        $this->account->removeElement($account);
-
+        if ($this->account->removeElement($account)) {
+            $account->removeChoice($this);  // Make sure to update the Choice on the Account side
+        }
+    
         return $this;
     }
 
