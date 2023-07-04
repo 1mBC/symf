@@ -64,7 +64,7 @@ class Choice
     {
         if (!$this->account->contains($account)) {
             $this->account->add($account);
-            // $account->addChoice($this);
+            $account->addChoice($this);
         }
 
         return $this;

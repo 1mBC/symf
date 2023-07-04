@@ -5,13 +5,15 @@ namespace App\Controller;
 use App\Entity\Account;
 use App\Form\AccountType;
 use App\Repository\AccountRepository;
+use App\Repository\ChoiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Doctrine\Common\Collections\ArrayCollection;
+
 
 #[Route('/account')]
 class AccountController extends AbstractController
@@ -41,6 +43,53 @@ class AccountController extends AbstractController
             'account' => $account,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/onflyupdate', name: 'account_onflyupdate', methods: ['POST'], options: ['expose' => true])]
+    public function onflyupdate(Request $request, EntityManagerInterface $entityManager, AccountRepository $accountRepository, ChoiceRepository $choiceRepository): Response
+    {
+        $accountId = $request->request->get('account');
+        $choiceId = $request->request->get('choice');
+        $checked = $request->request->get('checked');
+    
+        $account = $accountRepository->find($accountId);
+        $choice = $choiceRepository->find($choiceId);
+    
+        if ($checked) {
+            $choice->addAccount($account);
+        } else {
+            $choice->removeAccount($account);
+        }
+    
+        $entityManager->persist($choice);
+        $entityManager->flush();
+    
+        return new JsonResponse(['success' => true]);
+    }
+    
+    #[Route('/onflyupdate2', name: 'account_onflyupdate2', methods: ['POST'], options: ['expose' => true])]
+    public function onflyupdate2(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $accountId = $request->request->get('account');
+        $choiceId = $request->request->get('choice');
+        $checked = $request->request->get('checked');
+    
+        $db = $entityManager->getConnection();
+    
+        if ($checked) {
+            $query = '
+                INSERT INTO choice_account (choice_id, account_id) VALUES (:choice_id, :account_id)
+            ';
+        } else {
+            $query = '
+                DELETE FROM choice_account WHERE choice_id = :choice_id AND account_id = :account_id
+            ';
+        }
+        
+        $stmt = $db->prepare($query);
+        $stmt->executeQuery(['choice_id' => $choiceId, 'account_id' => $accountId]);
+        
+        return new JsonResponse(['success' => true]);
     }
 
     #[Route('/{id}', name: 'app_account_show', methods: ['GET'])]

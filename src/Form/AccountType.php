@@ -21,6 +21,8 @@ class AccountType extends AbstractType
             ;
         }
         if(isset($options['section'])){
+            $account = $options['data'] ?? null;
+            $accountId = $account ? $account->getId() : null;
             $builder
             ->add('choices', EntityType::class, [
                 'class' => Choice::class,
@@ -33,6 +35,11 @@ class AccountType extends AbstractType
                 'multiple' => true,
                 'expanded' => true, // change this to false if you want a select dropdown instead of checkboxes
                 'label' => 'section' . $options['section'],
+                'choice_attr' => function($choice, $key, $value) use($accountId) {
+                    // 'onchange' => 'saveChoice(this)' will add the onchange attribute to each checkbox
+                    return ['onchange' => 'saveChoice('.$accountId.','.$choice->getId().',this)'];
+                },
+
             ]);
         }
     }
