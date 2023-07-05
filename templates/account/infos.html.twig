@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Account pages{% endblock %}
+
+{% block body %}
+    <h1>Account pages</h1>
+    {{ app.user.username }}
+    {{ include('account/_form.html.twig') }}
+
+
+{% endblock %}

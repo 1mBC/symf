@@ -17,13 +17,15 @@
        {% endblock %}
     </head>
     <body>
-    {{ include('base.menu.test.html.twig') }}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {{ include('base.menu.html.twig') }}
+    {% endif %}
 
         {% block body %}{% endblock %}
 
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-         <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
-         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 
         {{ encore_entry_script_tags('app') }}
         {{ encore_entry_script_tags('onFlyInput') }}

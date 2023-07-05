@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Account index{% endblock %}
+{% block title %}Account display{% endblock %}
 
 {% block body %}
-    <h1>Account index</h1>
+    <h1>Account display</h1>
 
     <table class="table">
         <thead>
@@ -22,7 +22,7 @@
                 <td>{{ account.password }}</td>
                 <td>
                     <a href="{{ path('app_account_show', {'id': account.id}) }}">show</a>
-                    <a href="{{ path('app_account_edit', {'id': account.id}) }}">edit</a>
+                    <a href="{{ path('app_account_edit', {'id': account.id, 'section' : 1}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

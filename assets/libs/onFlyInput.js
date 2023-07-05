@@ -8,7 +8,7 @@ window.saveChoice = function(account, choice, checkbox)
 	}else{
 		postData["checked"] = '0';
 	}
-    var url = Routing.generate('account_onflyupdate2');
+    var url = Routing.generate('profile_onflyupdate2');
 
     $.post({
         url: url,
