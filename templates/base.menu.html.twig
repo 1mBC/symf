@@ -22,7 +22,7 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
 
-      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Recherche</a>
+      <a href="{{ path('app_search') }}" class="text-sm font-semibold leading-6 text-gray-900">Recherche</a>
 
       <div x-data="{ menuOpen: false }" class="relative">
         <button @click="menuOpen = !menuOpen" type="button" class="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900" aria-expanded="false">
@@ -156,8 +156,8 @@
                 </svg>
               </div>
               <div class="flex-auto">
-                <a href="#" class="block font-semibold text-gray-900">
-                  Demandes refusées
+                <a href="{{ path('app_profile_cheat') }}" class="block font-semibold text-gray-900">
+                  Demandes refusées / CHEAT DEV
                   <span class="absolute inset-0"></span>
                 </a>
                 <p class="mt-1 text-gray-600">Retrouvez toutes vos demandes refusées (par vous ou pas l'autre)</p>

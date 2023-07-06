@@ -21,9 +21,15 @@ class Choice
     #[ORM\ManyToMany(targetEntity: Account::class, mappedBy: 'choices')]
     private Collection $account;
 
-    #[ORM\ManyToOne(inversedBy: 'choices')]
+    #[ORM\ManyToOne(targetEntity: Criterion::class, inversedBy: 'choices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Criterion $criterion = null;
+
+    #[ORM\Column]
+    private ?int $position = null;
+
+    #[ORM\Column]
+    private ?bool $matching = null;
 
     public function __construct()
     {
@@ -87,6 +93,30 @@ class Choice
     public function setCriterion(?Criterion $criterion): static
     {
         $this->criterion = $criterion;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): static
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function isMatching(): ?bool
+    {
+        return $this->matching;
+    }
+
+    public function setMatching(bool $matching): static
+    {
+        $this->matching = $matching;
 
         return $this;
     }

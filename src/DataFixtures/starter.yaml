@@ -1,0 +1,23 @@
+App\Entity\Criterion:
+    criterion_{1..35}:
+        title: 'criterion_<current()>'
+        section: '<numberBetween(1,5)>'
+
+App\Entity\Choice:
+    choice_{1..100}:
+        title: 'choice_<current()>'
+        position: '<current()>'
+        criterion: '@criterion_<numberBetween(1,35)>'
+        matching: true
+
+App\Entity\Account:
+    account_{1..10}:
+        credit: 0
+        choices: '<numberBetween(30, 100)>x @choice_*'
+
+App\Entity\User:
+    user_{1..10}:
+        username: '<name()>'
+        email: '<email()>'
+        password: <password()>
+        account: '@account_<current()>'

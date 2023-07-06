@@ -7,41 +7,35 @@ use Symfony\Component\Form\AbstractType;
 use App\Entity\Choice;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Repository\ChoiceRepository;
+use App\Repository\CriterionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 
 class ProfileType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $accountId = $options['account_id'];
-        $section = $options['section'];
-
-        $builder
-        ->add('choices', EntityType::class, [
-            'class' => Choice::class,
-            'query_builder' => function (ChoiceRepository $cr) use($section) {
-                return $cr->createQueryBuilder('c')
-                    ->join('c.criterion', 'cr')
-                    ->where('cr.section = :section')
-                    ->setParameter('section', $section);
-            },
-            'multiple' => true,
-            'expanded' => true, // change this to false if you want a select dropdown instead of checkboxes
-            'label' => 'section' . $options['section'],
-            'choice_attr' => function($choice, $key, $value) use($accountId) {
-                return ['onchange' => 'saveChoice('.$accountId.','.$choice->getId().',this)'];
-            },
-
-        ]);
+        foreach($options['criteria'] as $criterion)
+        {
+            $builder->add('criterion_'.$criterion->getId(), CriterionType::class, [
+                'user_account_id' => $options['user_account_id'],
+                'data' => $criterion,
+                'user_choices' => $options['user_choices'],
+                'mapped' => false,
+                'label' => false,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Account::class,
-            'section' => null,
-            'account_id' => null,
+            'user_account_id' => null,
+            'criteria' => null,
+            'user_choices' => null,
         ]);
     }
 }

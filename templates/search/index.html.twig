@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SearchController!{% endblock %}
+
+{% block body %}
+
+{% for match in matches %}
+
+{{ match.score }} points communs avec : <br>
+{{ match.bin }} <br><br>
+
+{% endfor %}
+
+{% endblock %}

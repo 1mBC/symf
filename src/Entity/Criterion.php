@@ -21,7 +21,7 @@ class Criterion
     #[ORM\Column(length: 255)]
     private ?string $section = null;
 
-    #[ORM\OneToMany(mappedBy: 'criterion', targetEntity: Choice::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'criterion', targetEntity: Choice::class, orphanRemoval: true, fetch:"EAGER")]
     private Collection $choices;
 
     public function __construct()

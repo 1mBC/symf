@@ -29,7 +29,8 @@ class AccountController extends AbstractController
     #[Route('/infos', name: 'app_account_infos')]
     public function access(Request $request, AccountRepository $accountRepository): Response
     {
-        $account = $accountRepository->find($this->getUser()->getId());
+        $account = $this->getUser()->getAccount();
+        $choices = $account->getChoices();
         $form = $this->createForm(AccountType::class, $account);
         $form->handleRequest($request);
 
