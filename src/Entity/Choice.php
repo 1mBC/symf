@@ -18,7 +18,7 @@ class Choice
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\ManyToMany(targetEntity: Account::class, inversedBy: 'choices')]
+    #[ORM\ManyToMany(targetEntity: Account::class, mappedBy: 'choices')]
     private Collection $account;
 
     #[ORM\ManyToOne(inversedBy: 'choices')]

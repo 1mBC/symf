@@ -16,7 +16,7 @@ class Account
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: Choice::class, mappedBy: 'account')]
+    #[ORM\ManyToMany(targetEntity: Choice::class, inversedBy: 'account')]
     private Collection $choices;
 
     #[ORM\OneToOne(mappedBy: 'account', cascade: ['persist', 'remove'])]

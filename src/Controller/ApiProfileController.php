@@ -50,16 +50,16 @@ class ApiProfileController extends AbstractController
     
         if ($checked) {
             $query = '
-                INSERT INTO choice_account (choice_id, account_id) VALUES (:choice_id, :account_id)
+                INSERT INTO account_choice (account_id, choice_id) VALUES (:account_id, :choice_id)
             ';
         } else {
             $query = '
-                DELETE FROM choice_account WHERE choice_id = :choice_id AND account_id = :account_id
+                DELETE FROM account_choice WHERE choice_id = :choice_id AND account_id = :account_id
             ';
         }
         
         $stmt = $db->prepare($query);
-        $stmt->executeQuery(['choice_id' => $choiceId, 'account_id' => $accountId]);
+        $stmt->executeQuery(['account_id' => $accountId, 'choice_id' => $choiceId]);
         
         return new JsonResponse(['success' => true]);
     }
