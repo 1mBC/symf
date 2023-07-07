@@ -15,6 +15,8 @@ class Matching
 
     public function getMatches($user_account_id): array
     {
+        ini_set('memory_limit', '4096M');  // Augmente la limite de mémoire à 1024 Mo
+
         $allUsersChoicesBin = $this->getAllUsersChoicesBin();
 
         $userBin = $allUsersChoicesBin[$user_account_id];
@@ -71,6 +73,8 @@ class Matching
         return $allUsersChoicesBin;
     }
     
+
+    //Returns systematically 0 .. even with only 100 choices .. maybe try to split it ?
     public function countCommonBitsDec(string $binary1, string $binary2) {
         // Convert binary strings to decimal integers
         $num1 = bindec($binary1);
@@ -88,6 +92,7 @@ class Matching
         return $commonBits;
     }
 
+    //works well and seems fast (for now)
     function countCommonBitsIt(string $binary1, string $binary2) {
         $len = strlen($binary1);
         $commonBits = 0;
@@ -99,6 +104,8 @@ class Matching
         return $commonBits;
     }
     
+
+    //also returns 0 systematically ... it was GPT suggestion 
     public function countCommonBitsBCMath(string $binary1, string $binary2) {
         // Convert binary strings to decimal numbers
         $num1 = $this->bchexdec(bin2hex(pack('H*', $binary1)));
@@ -115,7 +122,6 @@ class Matching
     
         return $commonBits;
     }
-    
     private function bchexdec($hex) {
         $dec = '0';
         $len = strlen($hex);
@@ -123,7 +129,6 @@ class Matching
             $dec = bcadd($dec, bcmul(strval(hexdec($hex[$i-1])), bcpow('16', strval($len-$i))));
         return $dec;
     }
-    
     private function bcand($a,$b) {
         $a = $this->bchexdec(bin2hex(pack('H*', $a)));
         $b = $this->bchexdec(bin2hex(pack('H*', $b)));

@@ -63,4 +63,45 @@ class ApiProfileController extends AbstractController
         
         return new JsonResponse(['success' => true]);
     }
+
+    #[Route('/cheat', name: 'app_profile_cheat', methods: ['GET'])]
+    public function cheat(ChoiceRepository $choiceRepository, EntityManagerInterface $entityManager): Response
+    {
+        $allChoices = $choiceRepository->findAll();
+        $account = $this->getUser()->getAccount();
+        foreach($allChoices as $choice){
+            $account->addChoice($choice);
+        }
+
+        $entityManager->persist($account);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_profile_edit', ['section' => 1], Response::HTTP_SEE_OTHER);        
+
+    }
+
+
+    #[Route('/cheatSQL', name: 'app_profile_cheatSQL', methods: ['GET'])]
+    public function cheatSQL(ChoiceRepository $choiceRepository, EntityManagerInterface $entityManager): Response
+    {
+        $allChoices = $choiceRepository->findAll();
+        $accountId = $this->getUser()->getAccount()->getId();
+
+        $db = $entityManager->getConnection();
+
+        $query = '
+        INSERT INTO account_choice (account_id, choice_id) VALUES (:account_id, :choice_id)
+        ';  
+        foreach($allChoices as $choice)
+        {
+            $choiceId = $choice->getId();
+            $stmt = $db->prepare($query);
+            $stmt->executeQuery(['account_id' => $accountId, 'choice_id' => $choiceId]);
+        }
+
+
+        return $this->redirectToRoute('app_profile_edit', ['section' => 1], Response::HTTP_SEE_OTHER);        
+
+    }
+
 }

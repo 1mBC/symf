@@ -4,20 +4,20 @@ App\Entity\Criterion:
         section: '<numberBetween(1,5)>'
 
 App\Entity\Choice:
-    choice_{1..100}:
+    choice_{1..200}:
         title: 'choice_<current()>'
         position: '<current()>'
         criterion: '@criterion_<numberBetween(1,35)>'
         matching: true
 
 App\Entity\Account:
-    account_{1..10}:
+    account_{1..4000}:
         credit: 0
-        choices: '<numberBetween(30, 100)>x @choice_*'
+        choices: '<numberBetween(40, 140)>x @choice_*'
 
 App\Entity\User:
-    user_{1..10}:
-        username: '<name()>'
+    user_{1..4000}:
+        username: 'user<current()>'
         email: '<email()>'
         password: <password()>
         account: '@account_<current()>'

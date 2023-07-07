@@ -35,25 +35,6 @@ class ProfileController extends AbstractController
 
 
 
-    #[Route('/cheat', name: 'app_profile_cheat', methods: ['GET'])]
-    public function cheat(ChoiceRepository $choiceRepository, EntityManagerInterface $entityManager): Response
-    {
-        $allChoices = $choiceRepository->findAll();
-        $account = $this->getUser()->getAccount();
-        foreach($allChoices as $choice){
-            $account->addChoice($choice);
-        }
-
-        $entityManager->persist($account);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_profile_edit', ['section' => 1], Response::HTTP_SEE_OTHER);        
-
-    }
-
-
-
-
     #[Route('/{section}', name: 'app_profile_edit', methods: ['GET'])]
     public function edit(int $section, AccountRepository $accountRepository, CriterionRepository $criterionRepository): Response
     {
