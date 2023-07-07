@@ -15,6 +15,11 @@ window.saveChoice = function(account, choice, checkbox)
         data: postData,
         success: function(response) {
             console.log("saveBit done ");
+            if(checkbox.checked){
+                document.getElementById("fake-checkox-"+choice).classList.add("fake-checkbox-checked");
+            }else{
+                document.getElementById("fake-checkox-"+choice).classList.remove("fake-checkbox-checked");
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log("saveBit fail jqXHR.responseText : " + jqXHR.responseText);

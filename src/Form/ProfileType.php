@@ -24,7 +24,7 @@ class ProfileType extends AbstractType
                 'data' => $criterion,
                 'user_choices' => $options['user_choices'],
                 'mapped' => false,
-                'label' => false,
+                'label' => $criterion->getTitle(),
             ]);
         }
     }

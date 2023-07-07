@@ -1,0 +1,30 @@
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+    {%- for child in form %}
+        {{- form_widget(child) -}}
+    {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
+
+{% block checkbox_widget %}
+<div class="flex items-center">
+    <label class="flex items-center">
+        <input type="checkbox" class="hidden"
+            {{ block('widget_attributes') }}
+            {% if value is defined %}value="{{ value }}" {% endif %}
+            {% if checked %}checked="checked"{% endif %}
+            {# {% if onchange is defined %}onchange=onchange{% endif %} #}
+        />
+        <span
+            {% if value is defined %}id="fake-checkox-{{ value }}" {% endif %}
+            {% if checked %}
+                class="fake-checkbox-base fake-checkbox-checked"
+            {% else %}
+                class="fake-checkbox-base"
+            {% endif %}
+        ></span>
+        {% if label is defined %}{{ label }}{% endif %}
+    </label>
+</div>
+{% endblock %}

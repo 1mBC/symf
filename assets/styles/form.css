@@ -1,0 +1,13 @@
+.fake-checkbox-base{
+    height: 18px !important;
+    width: 18px !important;
+    border-radius: 3px;
+    display: inline-block;
+    margin-right: 10px;
+    flex-shrink: 0;
+    border: 1px solid grey;
+}
+
+.fake-checkbox-checked{
+    background-color: grey;
+}
